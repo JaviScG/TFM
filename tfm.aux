@@ -1,0 +1,110 @@
+\relax 
+\providecommand \babel@aux [2]{\global \let \babel@toc \@gobbletwo }
+\@nameuse{bbl@beforestart}
+\catcode `"\active 
+\catcode `<\active 
+\catcode `>\active 
+\@nameuse{es@quoting}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\babel@aux{spanish}{}
+\citation{nvidia2023optix}
+\citation{pharr2016physically}
+\citation{kajiya1986rendering}
+\citation{whitted1980improved}
+\citation{pharr2016physically}
+\newlabel{chapter:introduccion}{{}{1}{\listtablename }{chapter*.8}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Introducción}{1}{chapter.1}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Contexto y Motivación}{1}{section.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Planteamiento del Problema}{2}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Objetivos del Trabajo}{2}{section.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Metodología y Plan de Trabajo}{3}{section.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1.5}Estructura de la Memoria}{3}{section.1.5}\protected@file@percent }
+\newlabel{chapter:estado-arte}{{1.5}{3}{Estructura de la Memoria}{section.1.5}{}}
+\citation{pharr2016physically}
+\citation{kajiya1986rendering}
+\citation{nicodemus1977geometrical}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Estado del arte}{5}{chapter.2}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}La Ecuación de Renderizado}{5}{section.2.1}\protected@file@percent }
+\newlabel{eq:rendering_equation}{{2.1}{5}{La Ecuación de Renderizado}{equation.2.1}{}}
+\citation{cook1986stochastic}
+\citation{veach1995optimally}
+\citation{shirley1996monte}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Métodos de Monte Carlo en Renderizado}{6}{section.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}El Problema de la Varianza y la Convergencia}{6}{subsection.2.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Muestreo por Importancia (Importance Sampling)}{6}{section.2.3}\protected@file@percent }
+\citation{shirley1991direct}
+\citation{wang1992shading}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Estrategias de Muestreo para Luces Extensas}{7}{section.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Muestreo de Área Uniforme (Area Sampling)}{7}{subsection.2.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Muestreo por Ángulo Sólido (Solid Angle Sampling)}{7}{subsection.2.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Evolución del Hardware: Ray Tracing en Tiempo Real}{7}{section.2.5}\protected@file@percent }
+\citation{parker2010optix}
+\citation{nvidia2023optix}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Desarrollo Propuesto del TFM}{9}{chapter.3}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{chapter:desarrollo}{{3}{9}{Desarrollo Propuesto del TFM}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Selección de Herramientas y Entorno de Desarrollo}{9}{section.3.1}\protected@file@percent }
+\citation{nvidia2023optix}
+\citation{nvidia2023optix}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Arquitectura del Sistema Propuesta}{10}{section.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Relación entre los programas del pipeline de NVIDIA OptiX. Los bloques verdes representan funciones fijas del hardware/driver, mientras que los grises representan los programas definidos por el usuario. Fuente: \cite  {nvidia2023optix}.}}{10}{figure.caption.9}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:optix_pipeline}{{3.1}{10}{Relación entre los programas del pipeline de NVIDIA OptiX. Los bloques verdes representan funciones fijas del hardware/driver, mientras que los grises representan los programas definidos por el usuario. Fuente: \cite {nvidia2023optix}}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}El Pipeline de OptiX}{10}{subsection.3.2.1}\protected@file@percent }
+\citation{pharr2016physically}
+\citation{pharr2016physically}
+\citation{shirley1996monte}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Implementación de Estrategias de Muestreo}{11}{section.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Relación geométrica entre el área diferencial $dA$ y el ángulo sólido diferencial $d\omega $. El término $\cos  \theta $ representa la proyección del área sobre la dirección del rayo, y $r^2$ representa la atenuación cuadrática con la distancia. Fuente: Pharr et al. \cite  {pharr2016physically}.}}{11}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:solid_angle_geometry}{{3.2}{11}{Relación geométrica entre el área diferencial $dA$ y el ángulo sólido diferencial $d\omega $. El término $\cos \theta $ representa la proyección del área sobre la dirección del rayo, y $r^2$ representa la atenuación cuadrática con la distancia. Fuente: Pharr et al. \cite {pharr2016physically}}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Estrategia A: Muestreo Uniforme de Área}{11}{subsection.3.3.1}\protected@file@percent }
+\citation{veach1995optimally}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Estrategia B: Muestreo por Ángulo Sólido}{12}{subsection.3.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Plan de Validación y Métricas}{12}{section.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Resultados y discusión}{13}{chapter.4}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{chapter:resultados}{{4}{13}{Resultados y discusión}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Entorno Experimental}{13}{section.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Comparativa de Calidad Visual (Varianza)}{13}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Escenario de Luz Cercana}{13}{subsection.4.2.1}\protected@file@percent }
+\newlabel{fig:uniform_noise}{{4.1a}{14}{Muestreo Uniforme (32 spp)}{figure.caption.11}{}}
+\newlabel{sub@fig:uniform_noise}{{a}{14}{Muestreo Uniforme (32 spp)}{figure.caption.11}{}}
+\newlabel{fig:solidangle_noise}{{4.1b}{14}{Muestreo Ángulo Sólido (32 spp)}{figure.caption.11}{}}
+\newlabel{sub@fig:solidangle_noise}{{b}{14}{Muestreo Ángulo Sólido (32 spp)}{figure.caption.11}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Comparativa visual a bajas muestras. El método uniforme presenta ruido de alta frecuencia ("salt and pepper"), mientras que el muestreo por ángulo sólido produce una imagen notablemente más suave.}}{14}{figure.caption.11}\protected@file@percent }
+\newlabel{fig:visual_comparison}{{4.1}{14}{Comparativa visual a bajas muestras. El método uniforme presenta ruido de alta frecuencia ("salt and pepper"), mientras que el muestreo por ángulo sólido produce una imagen notablemente más suave}{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Análisis de Convergencia (RMSE)}{14}{section.4.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Comparativa de error (RMSE) según número de muestras (spp). Menor es mejor.}}{14}{table.caption.12}\protected@file@percent }
+\newlabel{tab:rmse_results}{{4.1}{14}{Comparativa de error (RMSE) según número de muestras (spp). Menor es mejor}{table.caption.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Análisis de Rendimiento (Tiempo de Cómputo)}{15}{section.4.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Tiempo medio de renderizado por frame (en milisegundos) a resolución 1080p.}}{15}{table.caption.13}\protected@file@percent }
+\newlabel{tab:performance_time}{{4.2}{15}{Tiempo medio de renderizado por frame (en milisegundos) a resolución 1080p}{table.caption.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Discusión del Trade-off}{15}{subsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Limitaciones Encontradas}{15}{section.4.5}\protected@file@percent }
+\bibdata{bibliografia}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Conclusiones}{17}{chapter.5}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{chapter:conclusiones}{{5}{17}{Conclusiones}{chapter.5}{}}
+\bibcite{nvidia2023optix}{1}
+\bibcite{kajiya1986rendering}{2}
+\bibcite{whitted1980improved}{3}
+\bibcite{pharr2016physically}{4}
+\bibcite{nicodemus1977geometrical}{5}
+\bibcite{cook1986stochastic}{6}
+\bibcite{veach1995optimally}{7}
+\bibcite{shirley1996monte}{8}
+\bibcite{shirley1991direct}{9}
+\bibcite{wang1992shading}{10}
+\bibcite{parker2010optix}{11}
+\bibstyle{ieeetr}
+\@writefile{toc}{\contentsline {chapter}{Bibliografía}{19}{chapter*.14}\protected@file@percent }
+\gdef \@abspage@last{40}

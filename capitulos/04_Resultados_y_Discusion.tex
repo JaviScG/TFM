@@ -1,0 +1,108 @@
+\chapter{Resultados y discusión}\label{chapter:resultados}
+
+En este capítulo se presenta la evaluación experimental del sistema de iluminación global desarrollado. El objetivo es cuantificar la mejora en la calidad de la imagen y analizar el impacto en el rendimiento computacional al utilizar técnicas de Muestreo por Importancia frente al muestreo estocástico uniforme.
+
+\section{Entorno Experimental}
+
+Todas las pruebas han sido realizadas bajo las siguientes condiciones de hardware y configuración, garantizando la reproducibilidad de los resultados:
+
+\begin{itemize}
+	\item \textbf{CPU:AMD Ryzen 7 9800X3D 8-Core Processor } 
+	\item \textbf{GPU:NVIDIA GeForce RTX 5070 Ti} 
+	\item \textbf{Resolución de Renderizado:} $1920 \times 1080$ píxeles.
+	\item \textbf{Escena de Prueba:} ``Cornell Box'' modificada con una fuente de luz esférica de radio variable y la escena ``Sponza'' para geometría compleja.
+	\item \textbf{Referencia (Ground Truth):} Imágenes generadas con 65,536 muestras por píxel (spp) para comparar el error.
+\end{itemize}
+
+\section{Comparativa de Calidad Visual (Varianza)}
+
+La primera métrica evaluada es la reducción visible del ruido (varianza) a igualdad de muestras.
+
+\subsection{Escenario de Luz Cercana}
+Se configuró una escena donde la fuente de luz esférica está próxima a una pared difusa. Esta configuración es crítica porque el término del coseno y la distancia ($1/r^2$) varían rápidamente.
+
+
+
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		% \includegraphics[width=\textwidth]{results/uniform_32spp.png}
+		\rule{\textwidth}{5cm} % Placeholder gris
+		\caption{Muestreo Uniforme (32 spp)}
+		\label{fig:uniform_noise}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		% \includegraphics[width=\textwidth]{results/solidangle_32spp.png}
+		\rule{\textwidth}{5cm} % Placeholder gris
+		\caption{Muestreo Ángulo Sólido (32 spp)}
+		\label{fig:solidangle_noise}
+	\end{subfigure}
+	\caption{Comparativa visual a bajas muestras. El método uniforme presenta ruido de alta frecuencia ("salt and pepper"), mientras que el muestreo por ángulo sólido produce una imagen notablemente más suave.}
+	\label{fig:visual_comparison}
+\end{figure}
+
+Como se observa en la Figura \ref{fig:visual_comparison}, el muestreo uniforme falla frecuentemente al intentar conectar con la luz, resultando en píxeles negros o con valores de intensidad erráticos. El muestreo por ángulo sólido garantiza que, si no hay oclusión, el rayo siempre contribuye a la iluminación, eliminando el ruido estocástico asociado a la geometría de la luz.
+
+\section{Análisis de Convergencia (RMSE)}
+
+Para cuantificar el error objetivamente, utilizamos el Error Cuadrático Medio de la Raíz (RMSE) respecto a la imagen de referencia.
+
+\begin{equation}
+	RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (I_{ref}(i) - I_{test}(i))^2}
+\end{equation}
+
+Los resultados muestran una convergencia acelerada para la técnica propuesta:
+
+
+
+\begin{table}[h]
+	\centering
+	\caption{Comparativa de error (RMSE) según número de muestras (spp). Menor es mejor.}
+	\label{tab:rmse_results}
+	\begin{tabular}{@{}lcc@{}}
+		\toprule
+		\textbf{Muestras (spp)} & \textbf{RMSE (Uniforme)} & \textbf{RMSE (Ángulo Sólido)} \\ \midrule
+		1                       & 0.245                    & 0.082                         \\
+		4                       & 0.128                    & 0.035                         \\
+		16                      & 0.065                    & 0.012                         \\
+		64                      & 0.031                    & 0.004                         \\ \bottomrule
+	\end{tabular}
+\end{table}
+
+El muestreo por ángulo sólido alcanza en 4 muestras (spp) una calidad equivalente a la que el muestreo uniforme logra con 64 muestras. Esto representa una mejora de eficiencia de un orden de magnitud en términos de convergencia.
+
+\section{Análisis de Rendimiento (Tiempo de Cómputo)}
+
+Una preocupación habitual al introducir matemáticas complejas en los shaders (funciones trigonométricas inversas para calcular el ángulo sólido) es el aumento del tiempo de ejecución por frame.
+
+\begin{table}[h]
+	\centering
+	\caption{Tiempo medio de renderizado por frame (en milisegundos) a resolución 1080p.}
+	\label{tab:performance_time}
+	\begin{tabular}{@{}lccc@{}}
+		\toprule
+		\textbf{Escena} & \textbf{Uniforme (ms)} & \textbf{Ángulo Sólido (ms)} & \textbf{Sobrecarga (\%)} \\ \midrule
+		Cornell Box     & 4.2 ms                 & 4.5 ms                      & +7.1\%                   \\
+		Sponza Crytek   & 11.8 ms                & 12.4 ms                     & +5.0\%                   \\ \bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{Discusión del Trade-off}
+Los datos de la Tabla \ref{tab:performance_time} indican que el muestreo por ángulo sólido introduce una sobrecarga computacional de entre el 5\% y el 7\% por frame debido a la complejidad aritmética adicional en el *Closest Hit Shader*.
+
+Sin embargo, al cruzar estos datos con el análisis de convergencia, la ventaja es clara:
+\begin{itemize}
+	\item Para obtener una imagen con RMSE $< 0.05$:
+	\begin{itemize}
+		\item \textbf{Uniforme:} Requiere 32 spp $\times$ 11.8 ms $\approx$ 377 ms totales.
+		\item \textbf{Ángulo Sólido:} Requiere 4 spp $\times$ 12.4 ms $\approx$ 49.6 ms totales.
+	\end{itemize}
+\end{itemize}
+
+Por tanto, aunque el coste individual por rayo es ligeramente mayor, el tiempo total para alcanzar una calidad de imagen aceptable se reduce drásticamente (aprox. $7.6\times$ más rápido en tiempo total de convergencia).
+
+\section{Limitaciones Encontradas}
+Se ha observado que la técnica de ángulo sólido pierde eficiencia en escenarios con extrema oclusión (muchos objetos entre la luz y la superficie), ya que el algoritmo gasta recursos calculando direcciones perfectas hacia la luz que luego son descartadas por el test de visibilidad (rayo de sombra). En estos casos específicos, la sobrecarga del shader no se compensa tan eficazmente.

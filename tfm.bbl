@@ -1,0 +1,53 @@
+\begin{thebibliography}{10}
+
+\bibitem{nvidia2023optix}
+N.~Corporation, {\em NVIDIA OptiX 7.7 Programming Guide}, 2023.
+\newblock Disponible en: https://raytracing-docs.nvidia.com/optix7/guide/.
+
+\bibitem{kajiya1986rendering}
+J.~T. Kajiya, ``The rendering equation,'' {\em ACM SIGGRAPH computer graphics},
+  vol.~20, no.~4, pp.~143--150, 1986.
+
+\bibitem{whitted1980improved}
+T.~Whitted, ``An improved illumination model for shaded display,'' {\em
+  Communications of the ACM}, vol.~23, no.~6, pp.~343--349, 1980.
+
+\bibitem{pharr2016physically}
+M.~Pharr, W.~Jakob, and G.~Humphreys, {\em Physically based rendering: From
+  theory to implementation}.
+\newblock Morgan Kaufmann, 3rd~ed., 2016.
+
+\bibitem{nicodemus1977geometrical}
+F.~E. Nicodemus, J.~C. Richmond, J.~J. Hsia, I.~W. Ginsberg, and T.~Limperis,
+  ``Geometrical considerations and nomenclature for reflectance,'' 1977.
+
+\bibitem{cook1986stochastic}
+R.~L. Cook, ``Stochastic sampling in computer graphics,'' {\em ACM Transactions
+  on Graphics (TOG)}, vol.~5, no.~1, pp.~51--72, 1986.
+
+\bibitem{veach1995optimally}
+E.~Veach and L.~J. Guibas, ``Optimally combining sampling techniques for monte
+  carlo rendering,'' in {\em Proceedings of the 22nd annual conference on
+  Computer graphics and interactive techniques}, pp.~419--428, 1995.
+
+\bibitem{shirley1996monte}
+P.~Shirley, C.~Wang, and K.~Zimmerman, ``Monte carlo techniques for direct
+  lighting,'' {\em ACM Transactions on Graphics (TOG)}, vol.~15, no.~1,
+  pp.~1--36, 1996.
+
+\bibitem{shirley1991direct}
+P.~Shirley and C.~Wang, ``Direct lighting calculation by monte carlo
+  integration,'' in {\em Eurographics Workshop on Rendering Techniques},
+  pp.~161--171, 1991.
+
+\bibitem{wang1992shading}
+C.~Wang, ``Shading with spherical light sources,'' in {\em Proceedings of the
+  Graphics Interface '92}, pp.~163--170, 1992.
+
+\bibitem{parker2010optix}
+S.~G. Parker, J.~Bigler, A.~Dietrich, H.~Friedrich, J.~Hoberock, D.~Luebke,
+  D.~McAllister, M.~McGuire, K.~Morley, A.~Robison, {\em et~al.}, ``Optix: a
+  general purpose ray tracing engine,'' in {\em ACM Transactions on Graphics
+  (TOG)}, vol.~29, pp.~1--13, ACM New York, NY, USA, 2010.
+
+\end{thebibliography}

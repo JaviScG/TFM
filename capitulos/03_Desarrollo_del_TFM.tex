@@ -1,0 +1,102 @@
+\chapter{Desarrollo Propuesto del TFM}\label{chapter:desarrollo}
+
+Una vez establecidos los fundamentos teóricos del transporte de luz, este capítulo detalla la propuesta de ingeniería para el sistema de renderizado. A continuación, se describe la arquitectura software planificada, el flujo de datos previsto entre la CPU y la GPU, y la metodología de implementación para los algoritmos de muestreo de iluminación directa dentro del pipeline de trazado de rayos.
+
+\section{Selección de Herramientas y Entorno de Desarrollo}
+
+Para cumplir con los requisitos de interactividad y eficiencia en el cálculo de la Ecuación de Renderizado, se propone un entorno de desarrollo que priorice el acceso a los núcleos de aceleración de hardware, minimizando la abstracción innecesaria.
+
+\begin{itemize}
+	\item \textbf{Lenguaje de Programación (Host):} Se utilizará \textbf{C++ (Estándar C++17 o superior)}. La elección se justifica por la necesidad de una gestión manual de memoria y la compatibilidad nativa con las librerías de NVIDIA, evitando la latencia inducida por lenguajes interpretados.
+	
+	\item \textbf{Motor de Trazado de Rayos:} El núcleo del sistema se construirá sobre el framework \textbf{NVIDIA OptiX 7+} \cite{parker2010optix}. A diferencia de las APIs gráficas tradicionales como Vulkan o DirectX, OptiX es un motor de cómputo diseñado específicamente para el trazado de rayos. Esta elección es estratégica: permite delegar la compleja gestión de las estructuras de aceleración (BVH) y la intersección rayo-triángulo al driver, permitiendo centrar el esfuerzo del TFM en la implementación de los algoritmos de muestreo y la física de la luz.
+	
+	\item \textbf{Programación en GPU (Device):} Los programas de sombreado (\textit{shaders}) se implementarán en \textbf{CUDA C++}. Esta es una ventaja significativa de usar OptiX frente a GLSL o HLSL, ya que permite compartir estructuras de datos y lógica matemática (structs de vectores, funciones de números aleatorios) entre el código del Host y el del Device, asegurando coherencia en los cálculos \cite{nvidia2023optix}.
+\end{itemize}
+
+\section{Arquitectura del Sistema Propuesta}
+
+Se plantea una arquitectura de renderizado híbrido donde la CPU gestiona la lógica de la escena y la GPU ejecuta el transporte de luz masivamente paralelo. El núcleo de visualización será un integrador de \textit{Path Tracing} progresivo.
+
+\begin{figure}[htbp]
+	\centering
+	% Ajusta el ancho según necesites (0.9\textwidth suele ir bien para diagramas anchos)
+	\includegraphics[width=0.9\textwidth]{optix_programs.jpg}
+	
+	\caption{Relación entre los programas del pipeline de NVIDIA OptiX. Los bloques verdes representan funciones fijas del hardware/driver, mientras que los grises representan los programas definidos por el usuario. Fuente: \cite{nvidia2023optix}.}
+	
+	\label{fig:optix_pipeline}
+\end{figure}
+
+\subsection{El Pipeline de OptiX}
+El flujo de ejecución propuesto se basará en el pipeline programable de OptiX 7. A diferencia de la rasterización, este flujo es iniciado por el lanzamiento de rayos (\textit{optixTrace}). Se prevé la implementación de los siguientes programas (kernels) CUDA:
+
+\begin{enumerate}
+	\item \textbf{Ray Generation Program (\texttt{\_\_raygen\_\_}):} Punto de entrada del pipeline. Por cada píxel, este kernel generará los rayos primarios y mantendrá el bucle de acumulación para el renderizado progresivo. Aquí se inicializarán las variables de radiancia y el estado del generador de números aleatorios (RNG).
+	
+	\item \textbf{Acceleration Structures (AS):} Se aprovechará la API de OptiX para construir y actualizar:
+	\begin{itemize}
+		\item \textit{Geometry Acceleration Structures (GAS):} Para las mallas estáticas.
+		\item \textit{Instance Acceleration Structures (IAS):} Para posicionar objetos en la escena, permitiendo instanciado eficiente en memoria.
+	\end{itemize}
+	
+	\item \textbf{Closest Hit Program (\texttt{\_\_closesthit\_\_}):} Este será el componente más complejo del desarrollo. Se ejecutará al encontrar una intersección válida. Su responsabilidad incluirá:
+	\begin{itemize}
+		\item Evaluación de la BRDF del material.
+		\item Cálculo de Iluminación Directa (Next Event Estimation).
+		\item Generación recursiva (o iterativa) del siguiente rayo del camino (\textit{bounce}).
+	\end{itemize}
+	
+	\item \textbf{Miss Program (\texttt{\_\_miss\_\_}):} Determinará el color de fondo o la iluminación basada en mapas de entorno (HDRI) cuando un rayo no intercepte geometría.
+\end{enumerate}
+
+\section{Implementación de Estrategias de Muestreo}
+
+El objetivo central de la implementación es la comparación de eficiencia entre estrategias de muestreo. Para ello, se integrará la técnica de \textit{Next Event Estimation} (NEE), separando el cálculo de la luz directa en cada rebote. Se proponen dos algoritmos para la estimación de la integral $L_{dir}$:
+
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.6\textwidth]{pha04f06.png}
+	\caption{Relación geométrica entre el área diferencial $dA$ y el ángulo sólido diferencial $d\omega$. El término $\cos \theta$ representa la proyección del área sobre la dirección del rayo, y $r^2$ representa la atenuación cuadrática con la distancia. Fuente: Pharr et al. \cite{pharr2016physically}.}
+	\label{fig:solid_angle_geometry}
+\end{figure}
+
+
+Como se ilustra en la Figura \ref{fig:optix_pipeline}, el pipeline de trazado de rayos en OptiX interconecta varios programas de usuario y funciones fijas para realizar el recorrido de la escena.
+
+
+
+\subsection{Estrategia A: Muestreo Uniforme de Área}
+Se implementará como línea base de comparación. El enfoque consiste en seleccionar puntos aleatorios sobre la superficie física de la fuente de luz.
+El procedimiento planeado es:
+\begin{enumerate}
+	\item Generación de coordenadas aleatorias uniformes sobre la malla de la luz.
+	\item Cálculo de la PDF de área: $p_A = 1 / Area$.
+	\item Conversión explícita de la PDF a medida de ángulo sólido mediante el jacobiano geométrico:
+	\begin{equation}
+		p_{\omega} = \frac{distancia^2}{Area \cdot |\cos(\theta_{luz})|}
+	\end{equation}
+\end{enumerate}
+Se anticipa que este método presentará problemas de varianza (ruido) en situaciones donde la luz sea pequeña o distante, debido a que el término $1/distancia^2$ puede crecer indefinidamente \cite{shirley1996monte}.
+
+\subsection{Estrategia B: Muestreo por Ángulo Sólido}
+Como propuesta de mejora, se implementará el muestreo directo del cono de luz subtendido desde el punto de sombreado.
+Para el caso de luces esféricas, el algoritmo propuesto incluye:
+\begin{enumerate}
+	\item Construcción de un marco de referencia local alineado con el centro de la luz.
+	\item Muestreo uniforme dentro del cono definido por $\theta_{max}$, donde $\sin(\theta_{max}) = Radio / Distancia$.
+	\item Uso de una PDF constante en el dominio angular, eliminando el término cuadrático de la distancia en el estimador de Monte Carlo:
+	\begin{equation}
+		p_{\omega} = \frac{1}{2\pi (1 - \cos(\theta_{max}))}
+	\end{equation}
+\end{enumerate}
+Se espera que esta técnica demuestre una robustez superior y una convergencia más rápida hacia la imagen sin ruido \cite{veach1995optimally}.
+
+\section{Plan de Validación y Métricas}
+Para cuantificar el éxito de la implementación, se desarrollará un sistema de ``profilin'' en tiempo real. Las métricas que se proponen recolectar incluyen:
+
+\begin{itemize}
+	\item \textbf{Rendimiento (ms/frame):} Tiempo de cómputo por cuadro para evaluar si la sobrecarga matemática del muestreo por ángulo sólido compensa la reducción de ruido.
+	\item \textbf{Convergencia (MSE/RMSE):} Se comparará el error cuadrático medio de las imágenes generadas respecto a una imagen de referencia (\textit{Ground Truth}) generada con un número muy elevado de muestras (ej. $N=10,000$).
+\end{itemize}

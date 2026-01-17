@@ -1,0 +1,60 @@
+\label{chapter:introduccion}\chapter{Introducción}
+
+\section{Contexto y Motivación}
+
+La síntesis de imágenes realistas se plantea como uno de los objetivos más ambiciosos y complejos de la informática gráfica desde su concepción. La industria de los gráficos en tiempo real , conformada principalmente por los videojuegos y la simulación interactiva, ha basado su trabajo en la técnica de renderizado de la rasterización durante décadas. Si bien la rasterización es eficiente en cuánto a términos computacionales, esta se limita al no simular la correctamente las bases físicas de la iluminación y depender de aproximaciones y trucos visuales para poder imitar el comportamiento de la luz.
+
+Teniendo esto en cuenta, en las últimas décadas se ha producido un cambio de paradigma fundamental gracias a la introducción de la Ecuación de Renderizado \cite{kajiya1986rendering} y al aumento exponencial de la potencia de cálculo de los sistemas informáticos modernos. Si bien técnicas como el \textit{Ray Tracing} surgieron inicialmente \cite{whitted1980improved}, ha sido la evolución hacia algoritmos estocásticos como el \textit{Path Tracing} lo que ha marcado la diferencia. Estas últimas técnicas se han convertido en el estándar indiscutible para la producción de imágenes realistas en la industria cinematográfica \cite{pharr2016physically}.
+
+Gracias a la aparición de hardware de consumo dedicado, concretamente las Unidades de Procesamiento Gráfico (GPU) y la capacidad de sus núcleos de aceleración de trazado de rayos se plantea como posible el desarrollo de la iluminación global en tiempo real. Debido a esto es que se pueden lograr hazañas como la simulación de fenómenos físicos complejos como reflexiones, refracciones y sombras de forma interactiva, muestra del progreso tecnológico que se ha experimentado esta última década en los sistemas domésticos. 
+
+Aún así, debido a la complejidad de la iluminación global esta sigue siendo una tarea increíblemente costosa. Se requiere de resolver y computar integrales multidimensionales por cada píxel de la imagen para lograr la simulación precisa del transporte de la luz. Para lograr un tasa de fotogramas objetivo de 60 fotogramas por segundo se requiere que todo este computo se realice dentro de un plazo de aproximadamente 16 milisegundos.
+
+
+\section{Planteamiento del Problema}
+
+El desafío central de este trabajo no es solo generar una imagen realista, sino hacerlo de manera eficiente. Los motores de renderizados con base en la física hacen uso de métodos como  Monte Carlo que les permiten estimar la cantidad de luz que llega a la cámara de forma estocástica, obteniendo de esta manera una muestra uniforme de la escena. 
+
+Sin embargo el uso de Monte Carlo también presenta desventajas. Principalmente al muestrear distintas fuentes de luz, se puede observar cierta varianza o ''ruido´´ dentro de las imágenes. Este problema es especialmente notable cuando tratamos con fuentes de luz extensas (Area Lights) las cuáles, a diferencia de las fuentes de luz puntuales, se extienden a lo largo de un área. Estas fuentes requieren de un algoritmo de muestreo inteligente o de lo contrario se desperdiciaran recursos muestreando direcciones sin importancia real de cara al resultado de la iluminación de la imagen real. 
+
+Es por esto que se originan soluciones matemáticas originadas en el Muestreo por Importancia (Importance Sampling) con el objetivo de orientar los rayos hacia las zonas con mayor relevancia lumínica
+
+
+\section{Objetivos del Trabajo}
+
+El objetivo principal de este Trabajo Fin de Máster es el análisis, diseño, implementación y validación de un sistema software interactivo de visualización 3D. Este sistema se basará en técnicas de \textit{Path Tracing} con cálculo de Iluminación Global, diseñado para aprovechar eficientemente la arquitectura paralela de las GPUs modernas.
+
+De este objetivo general se desprenden los siguientes objetivos específicos:
+
+\begin{enumerate}
+	
+	\item \textbf{Diseño de la Arquitectura:} Definir los requerimientos funcionales y no funcionales de un motor de renderizado híbrido o puro de trazado de rayos, seleccionando las APIs gráficas más adecuadas (como Vulkan, DirectX 12 o NVIDIA OptiX) para el desarrollo.
+	
+	\item \textbf{Implementación de Algoritmos de Muestreo:} Desarrollar e integrar en el sistema diversos estimadores de iluminación directa, comparando estrategias de muestreo uniforme frente a estrategias de muestreo por ángulo sólido.
+	
+	\item \textbf{Evaluación Comparativa:} Realizar pruebas de rendimiento y calidad visual para cuantificar la eficiencia de los algoritmos implementados. Se busca demostrar cómo las técnicas de muestreo por importancia reducen el tiempo de convergencia de la imagen.
+	
+	\item \textbf{Producción de una Herramienta Interactiva:} El resultado final será una aplicación funcional que permita al usuario navegar por una escena 3D y observar en tiempo real el impacto de los diferentes algoritmos de iluminación.
+\end{enumerate}
+
+\section{Metodología y Plan de Trabajo}
+
+Para la consecución de los objetivos planteados, se ha seguido una metodología incremental e iterativa. El desarrollo se ha estructurado en fases claramente diferenciadas que abarcan desde la investigación teórica hasta la implementación práctica.
+
+El plan de trabajo ha constado de las siguientes etapas:
+\begin{itemize}
+	\item Investigación teórica sobre la física del transporte de luz y estadística aplicada (Monte Carlo).
+	\item Estudio de las herramientas de desarrollo para GPGPU (General-Purpose computing on Graphics Processing Units).
+	\item Desarrollo del núcleo del motor de renderizado (\textit{kernel} de trazado de rayos).
+	\item Implementación progresiva de materiales y fuentes de luz.
+	\item Fase de pruebas, recolección de métricas (tiempos de \textit{frame} y error numérico) y optimización.
+\end{itemize}
+
+\section{Estructura de la Memoria}
+
+El presente documento recoge todo el proceso de investigación y desarrollo llevado a cabo. A continuación del presente capítulo introductorio, la memoria se organiza de la siguiente manera:
+
+El \textbf{Capítulo 2} establece el marco teórico, describiendo la Ecuación de Renderizado y profundizando en las matemáticas detrás de la integración de Monte Carlo y el Muestreo por Importancia.
+El \textbf{Capítulo 3} detalla el diseño y la implementación del sistema, justificando la elección de las tecnologías y describiendo la arquitectura del software desarrollado.
+El \textbf{Capítulo 4} presenta los resultados obtenidos, ofreciendo comparativas visuales y gráficas de rendimiento que validan las hipótesis planteadas.
+Finalmente, el \textbf{Capítulo 5} expone las conclusiones alcanzadas y propone líneas de trabajo futuro para continuar mejorando el sistema.

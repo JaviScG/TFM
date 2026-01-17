@@ -1,0 +1,82 @@
+\label{chapter:estado-arte}\chapter[Estado del arte]{Estado del arte / Trabajos previos}
+
+Para abordar el diseño de un sistema de renderizado realista basado en trazado de rayos, es imperativo comprender los fundamentos físicos del transporte de la luz y las herramientas estadísticas necesarias para simularlo computacionalmente \cite{pharr2016physically}. Este capítulo revisa la formulación matemática del problema, los métodos numéricos para resolverla y las técnicas modernas de muestreo para reducir la varianza en fuentes de luz extensas.
+
+\section{La Ecuación de Renderizado}
+
+En la síntesis de imágenes, la prioridad reside en calcular la radiancia que alcanza los sensores de una cámara virtual. El fundamento teórico de este cálculo es la Ecuación de Renderizado, la cual describe el equilibrio de la energía lumínica en la escena mediante una formulación integral \cite{kajiya1986rendering}.
+
+Para un punto $x$ en una superficie, la radiancia saliente $L_o$ en una dirección $\omega_o$ es la suma de la luz emitida por la propia superficie en caso de ser una fuente de luz y la luz reflejada proveniente de todas las direcciones incidentes sobre el hemisferio $\Omega$:
+
+\begin{equation} \label{eq:rendering_equation}
+	L_o(x, \omega_o) = L_e(x, \omega_o) + \int_{\Omega} f_r(x, \omega_i, \omega_o) L_i(x, \omega_i) (\omega_i \cdot n) d\omega_i
+\end{equation}
+
+Donde:
+\begin{itemize}
+	\item $L_o(x, \omega_o)$: Radiancia saliente (la luz que viaja hacia la cámara).
+	\item $L_e(x, \omega_o)$: Radiancia emitida (término no nulo solo si el objeto es una fuente de luz).
+	\item $\Omega$: El hemisferio de direcciones centrada en la normal de la superficie $n$.
+	\item $f_r(x, \omega_i, \omega_o)$: La función de distribución de reflectancia bidireccional (\textbf{BRDF}), que describe las propiedades materiales (color, rugosidad, metalicidad) \cite{nicodemus1977geometrical}.
+	\item $L_i(x, \omega_i)$: Radiancia incidente desde la dirección $\omega_i$.
+	\item $(\omega_i \cdot n)$: El factor del coseno de Lambert, que atenúa la luz incidente según el ángulo.
+\end{itemize}
+
+Esta ecuación es recursiva por naturaleza: para conocer la luz incidente $L_i$, debemos evaluar la $L_o$ de otro punto en la escena, lo que da lugar a caminos de luz infinitos.
+
+\section{Métodos de Monte Carlo en Renderizado}
+
+Salvo en escenas triviales, la ecuación (\ref{eq:rendering_equation}) no tiene solución analítica. Por ello, se utilizan métodos de integración numérica estocástica, conocidos como métodos de Monte Carlo.
+
+La idea central es aproximar la integral mediante el promedio de $N$ muestras aleatorias. El estimador de Monte Carlo para la integral de iluminación es:
+
+\begin{equation}
+	\langle L_o \rangle \approx \frac{1}{N} \sum_{k=1}^{N} \frac{f_r(\dots) L_i(\dots) (\omega_i \cdot n)}{p(\omega_k)}
+\end{equation}
+
+Donde $p(\omega_k)$ es la Función de Densidad de Probabilidad (PDF) con la que se escogieron las direcciones aleatorias.
+
+\subsection{El Problema de la Varianza y la Convergencia}
+Los métodos de Monte Carlo son ``imparciales'' (su esperanza matemática es el valor real de la integral), pero sufren de varianza. En una imagen renderizada, la varianza se manifiesta como ruido de alta frecuencia \cite{cook1986stochastic}. El error de un estimador de Monte Carlo decrece a un ritmo de $O(1/\sqrt{N})$. Como consecuencia, para reducir el ruido a la mitad, necesitamos multiplicar por cuatro el número de muestras y tiempo de cálculo. Dado que en tiempo real disponemos de tiempo limitado para muestrear, optimizar la convergencia es crítico.
+
+\section{Muestreo por Importancia (Importance Sampling)}
+
+La técnica más efectiva para reducir la varianza sin aumentar el número de muestras ($N$) es el \textit{Muestreo por Importancia} \cite{veach1995optimally}.
+Matemáticamente, la varianza se minimiza cuando la distribución de probabilidad de las muestras $p(x)$ es proporcional a la función que se está integrando $f(x)$.
+
+\begin{equation}
+	p(x) \propto f(x)
+\end{equation}
+
+En términos de renderizado, esto significa que debemos lanzar más rayos hacia las direcciones donde esperamos encontrar más luz o donde el material refleja más. Si lanzamos rayos a zonas oscuras o donde el material no refleja, estamos desperdiciando tiempo de cómputo y aumentando el ruido.
+
+\section{Estrategias de Muestreo para Luces Extensas}
+
+En este trabajo nos centramos en la iluminación directa proveniente de fuentes de luz extensas (\textit{Area Lights}). A diferencia de las luces puntuales, las luces de área requieren integrar sobre su superficie. Existen principalmente dos estrategias para muestrearlas \cite{shirley1996monte}:
+
+\subsection{Muestreo de Área Uniforme (Area Sampling)}
+Esta es la técnica más básica. Consiste en elegir un punto aleatorio $y$ uniformemente sobre la superficie de la fuente de luz \cite{shirley1991direct}.
+La PDF con respecto al área es constante: $p_A(y) = 1 / A$, donde $A$ es el área total de la luz.
+Para usar esta muestra en la ecuación de renderizado, debemos convertir la PDF de medida de área a medida de ángulo sólido:
+
+\begin{equation}
+	p(\omega) = \frac{R^2}{A \cdot \cos \theta_{light}}
+\end{equation}
+
+Esta técnica funciona bien cuando la luz es grande y está cerca. Sin embargo, si la luz es pequeña o está lejos, la probabilidad de ``acertar'' a la luz lanzando rayos aleatorios desde la superficie es baja, o introduce factores geométricos muy grandes que disparan la varianza.
+
+\subsection{Muestreo por Ángulo Sólido (Solid Angle Sampling)}
+Esta técnica es más avanzada y robusta. En lugar de elegir puntos en la superficie de la luz, elegimos direcciones dentro del cono subtendido por la luz desde el punto de vista del sombreado \cite{wang1992shading}.
+Para una luz esférica, por ejemplo, se muestrea uniformemente el cono que engloba la esfera.
+La PDF es constante con respecto al ángulo sólido: $p(\omega) = 1 / \Omega_{light}$.
+
+El muestreo por ángulo sólido elimina casi por completo el ruido generado por el término geométrico ($1/R^2$) presente en el muestreo de área, siendo fundamental para renderizadores robustos.
+
+\section{Evolución del Hardware: Ray Tracing en Tiempo Real}
+
+Históricamente, el trazado de rayos estaba reservado al renderizado \textit{offline} debido a su coste $O(\log M)$ por rayo (donde $M$ es el número de triángulos), frente al coste $O(1)$ de la rasterización.
+Sin embargo, la introducción de la arquitectura \textit{NVIDIA Turing} (y posteriores Ampere/Ada Lovelace) incorporó los \textit{RT Cores}. Estos son circuitos ASIC diseñados específicamente para acelerar:
+\begin{enumerate}
+	\item El recorrido de las estructuras de aceleración (BVH - Bounding Volume Hierarchies).
+	\item La intersección rayo-triángulo.
+\end{enumerate}

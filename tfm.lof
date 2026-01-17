@@ -1,0 +1,9 @@
+\babel@toc {spanish}{}\relax 
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Relación entre los programas del pipeline de NVIDIA OptiX. Los bloques verdes representan funciones fijas del hardware/driver, mientras que los grises representan los programas definidos por el usuario. Fuente: \cite {nvidia2023optix}.}}{10}{figure.caption.9}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Relación geométrica entre el área diferencial $dA$ y el ángulo sólido diferencial $d\omega $. El término $\cos \theta $ representa la proyección del área sobre la dirección del rayo, y $r^2$ representa la atenuación cuadrática con la distancia. Fuente: Pharr et al. \cite {pharr2016physically}.}}{11}{figure.caption.10}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Comparativa visual a bajas muestras. El método uniforme presenta ruido de alta frecuencia ("salt and pepper"), mientras que el muestreo por ángulo sólido produce una imagen notablemente más suave.}}{14}{figure.caption.11}%
+\addvspace {10\p@ }

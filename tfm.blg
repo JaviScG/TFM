@@ -1,0 +1,76 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: tfm.aux
+Reallocating 'name_of_file' (item size: 1) to 13 items.
+Reallocating 'name_of_file' (item size: 1) to 7 items.
+The style file: ieeetr.bst
+Database file #1: bibliografia.bib
+Repeated entry---line 39 of file bibliografia.bib
+ : @article{kajiya1986rendering
+ :                             ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 64 of file bibliografia.bib
+ : @inproceedings{veach1995optimally
+ :                                  ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 97 of file bibliografia.bib
+ : @inproceedings{kajiya1986rendering
+ :                                   ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 107 of file bibliografia.bib
+ : @book{pharr2016physically
+ :                          ,
+I'm skipping whatever remains of this entry
+Warning--entry type for "nicodemus1977geometrical" isn't style-file defined
+--line 126 of file bibliografia.bib
+Repeated entry---line 133 of file bibliografia.bib
+ : @inproceedings{veach1995optimally
+ :                                  ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 149 of file bibliografia.bib
+ : @incollection{shirley1996monte
+ :                               ,
+I'm skipping whatever remains of this entry
+Warning--can't use both volume and number fields in parker2010optix
+You've used 11 entries,
+            1876 wiz_defined-function locations,
+            545 strings with 5218 characters,
+and the built_in function-call counts, 3118 in all, are:
+= -- 310
+> -- 110
+< -- 0
++ -- 42
+- -- 31
+* -- 214
+:= -- 431
+add.period$ -- 13
+call.type$ -- 11
+change.case$ -- 10
+chr.to.int$ -- 0
+cite$ -- 12
+duplicate$ -- 161
+empty$ -- 309
+format.name$ -- 31
+if$ -- 760
+int.to.chr$ -- 0
+int.to.str$ -- 11
+missing$ -- 10
+newline$ -- 38
+num.names$ -- 11
+pop$ -- 44
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 111
+stack$ -- 0
+substring$ -- 222
+swap$ -- 66
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 1
+while$ -- 35
+width$ -- 13
+write$ -- 110
+(There were 6 error messages)
